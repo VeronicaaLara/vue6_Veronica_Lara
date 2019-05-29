@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title> VUE 6º ENTREGA VERONICA LARA </title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body background="background.jpg">
+	
+		<header class="px3 py3">
+				<div class="pt-2">
+						<img src ="banner.png" class="card-img-top" alt="">
+					</div>	
+			</header>
+
+				<div id="app">
+					<div class="cards pt-5">
+						<character v-for = "character in characters" :character ="character"></character>	
+					</div>
+				</div>
+
+		<template id="chatacterTemp">
+			<div class="card w-25 p-1 m-3">
+					<img :src = "img" alt="" class="card-img">
+				<div class="card-body">
+					<h5 style="color: #008000">{{ character.name }}</h5>
+				<div class="card-text cardCharacter">
+					<p style="color: #008000"> ID: </p>
+					<p>{{ character.id }}</p>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="cardCharacter">
+						<p style="color: #008000"> Status: </p>
+						<p>{{ character.status }}</p>
+					</li>
+					<li class="cardCharacter">
+						<p style="color: #008000"> Species: </p>
+						<p>{{ character.species }}</p>
+					</li>
+					<li class="cardCharacter">
+						<p style="color: #008000"> Type: </p>
+						<p>{{ character.type }}</p>
+					</li>
+					<li class="cardCharacter">
+						<p style="color:#008000"> Gender: </p>
+						<p>{{ character.gender }}</p>
+					</li>
+				</ul>
+			</div>
+		</template>
+
+	
+</body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.18/vue.js"></script>
+
+<script>
+	Vue.component('character', {
+		props: ["character"],
+		template: "#chatacterTemp",
+		computed: {
+			img: function(){
+				return this.character.image;
+			}
+		}
+	});
+
+	new Vue({
+		el: "#app",
+		data: {
+			characters: []
+		},
+		created: function(){
+			axios.get("https://rickandmortyapi.com/api/character/")
+			.then(response => {
+				response.data.results.length = 9;
+
+				response.data.results.forEach(data => {
+
+					let type = data.type == "" ? "Unknow":data.type;
+
+					let character = {
+						image: data.image,
+						name: data.name,
+						id: data.id,
+						status: data.status,
+						species: data.species,
+						type: type,
+						gender: data.gender
+					};
+
+					this.characters.push(character);
+
+				});
+			})
+			.catch(function(error){
+				console.log(error);
+			})
+		}
+	});
+	
+
+</script>
+
+<script type="styles.css"></script>
+</html>
